@@ -41,6 +41,17 @@ public class Service_Phong {
         }
         else return "NOT FOUND";
     }
+    public Object getActivePhong(){
+        List<Phong> listPhong = res_Phong.getActivePhong();
+        if(!listPhong.isEmpty()){
+            List<DTO_Phong> result = new ArrayList<>();
+            Converter_Phong converter = new Converter_Phong();
+            for(Phong temp: listPhong){
+                result.add(converter.convertPhong_to_DTO(temp));
+            }
+            return result;
+        }else return "EMPTY";
+    }
 
     public Object UpdatePhong(DTO_Phong dto){
         if (res_Phong.getNumberPhong(dto.getIdphong())!=0){

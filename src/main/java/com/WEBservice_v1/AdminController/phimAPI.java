@@ -33,7 +33,7 @@ public class phimAPI {
                 return new ResponseEntity<Object>(result, HttpStatus.OK);
 
             } catch (Exception e){
-                return new ResponseEntity<Object>(ser_Phim.getPhim(id).toString(), HttpStatus.NO_CONTENT);
+                return new ResponseEntity<Object>(ser_Phim.getPhim(id).toString(), HttpStatus.NOT_ACCEPTABLE);
             }
             } else return new ResponseEntity<>("NO RIGHT", HttpStatus.NOT_ACCEPTABLE);
 

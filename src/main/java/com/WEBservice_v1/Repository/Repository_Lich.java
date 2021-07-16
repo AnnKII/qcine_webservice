@@ -17,7 +17,7 @@ public interface Repository_Lich extends JpaRepository<Lich, Integer> {
     @Query(value = "select count(malich) from Lich where malich=?1 order by ngay,gio")
     public int getNumberLich(int malich);
 
-    @Query(value="from Lich where ngay>=current_date  and phim.state=1 order by ngay,gio")
+    @Query(value="from Lich where ngay=current_date  and phim.state=1 order by ngay,gio")
     public List<Lich> getCurrentLich();
 
     @Query(value="from Lich where phim.idphim=?1 and phim.state=1 order by ngay, gio")

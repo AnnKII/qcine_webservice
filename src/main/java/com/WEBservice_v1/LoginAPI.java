@@ -38,8 +38,37 @@ public class LoginAPI {
                     .claim("name", dto_Khach.getTen())
                     .claim("role", String.valueOf(dto_Khach.getRole()))
                     .signWith(login.getKey()).compact();
-            System.out.println("KEY GOTTEN: "+ login.getSecrectKey());
-            return new ResponseEntity<>(jwt, HttpStatus.OK);
+
+            String role = Jwts.parser().setSigningKey(login.getKey()).parseClaimsJws(jwt).getBody().get("role", String.class);
+            System.out.println("Role: "+role);
+            if (role.trim().equals("admin") || role.trim().equals("nhanvien") )
+                return new ResponseEntity<>(jwt, HttpStatus.OK);
+            else throw new Exception();
+        }
+        catch (Exception e){
+            System.out.println("LOGIN FAILED");
+            //e.printStackTrace();
+            return new ResponseEntity<>("FAIL", HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+    @PutMapping("userLogin")
+    public Object userLogin(@RequestBody entity_LoginINFO info){
+        try{
+//            System.out.println("Username: "+ info.getUsername());
+//            System.out.println("Password: "+ info.getPassword());
+            LoginController(login);
+            DTO_KhachHang dto_Khach = (DTO_KhachHang) ser_Khach.login(info.getUsername().trim(), info.getPassword().trim());
+            //  System.out.println("Secrect key: "+ login.getSecrectKey());
+            String jwt = Jwts.builder()
+                    .claim("username", dto_Khach.getUsername())
+                    .claim("name", dto_Khach.getTen())
+                    .claim("role", String.valueOf(dto_Khach.getRole()))
+                    .signWith(login.getKey()).compact();
+            String role = Jwts.parser().setSigningKey(login.getKey()).parseClaimsJws(jwt).getBody().get("role", String.class);
+            System.out.println("Role: "+role);
+            if (role.trim().equals("user"))
+                return new ResponseEntity<>(jwt, HttpStatus.OK);
+            else throw new Exception();
         }
         catch (Exception e){
             System.out.println("LOGIN FAILED");

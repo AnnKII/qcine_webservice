@@ -17,7 +17,7 @@ public class userCtHoaDonAPI {
     @Autowired
     Service_CtHoaDon ser_CT;
 
-    @GetMapping("user/cthoadon/{mact}")
+    @GetMapping("user/{mact}")
     public ResponseEntity<Object> getCtHoaDon(@PathVariable("mact") int mahd){
         try{
             List<DTO_CtHoaDon> result = (List<DTO_CtHoaDon>) ser_CT.getCtHoaDonByMaHD(mahd);
@@ -35,6 +35,16 @@ public class userCtHoaDonAPI {
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+    @GetMapping("user/cthoadon/hoadon/{mahd}")
+    public ResponseEntity<Object> getCtHoaDonFollowedByMaHD(@PathVariable("mahd") int mahd){
+        try{
+            List<DTO_CtHoaDon> listCT = (List<DTO_CtHoaDon>) ser_CT.getCtHoaDonByMaHD(mahd);
+            return new ResponseEntity<>(listCT, HttpStatus.OK);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
     }
 

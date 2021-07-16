@@ -16,9 +16,9 @@ public interface Repository_Phim extends JpaRepository<Phim, String> {
     @Query(value="select count (idphim) from Phim where idphim=?1")
     public int getNumberPhim(String id);
 
-    @Query(value="from Phim where state=1")
+    @Query(value="from Phim where state=1 order by ngaykc")
     public List<Phim> getCurrentPhim();
 
-    @Query(value="from Phim where state=2")
+    @Query(value="from Phim where state=2 order by ngaykc")
     public List<Phim> getFuturePhim();
 }

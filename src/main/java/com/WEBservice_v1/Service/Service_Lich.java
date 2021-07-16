@@ -182,4 +182,19 @@ public class Service_Lich {
             return "FAILED";
         }
     }
+    public Object getLichFollowrdByDate(Date date){
+        List<Lich> listLich = res_Lich.getLichFollowedByNgay(date);
+        if(listLich.isEmpty())
+            return "EMPTY";
+        else{
+            List<DTO_Lich> listDTO = new ArrayList<>();
+            Converter_Lich converter = new Converter_Lich();
+            for (Lich t: listLich){
+                listDTO.add(converter.convertLich_to_DTO(t));
+            }
+            return listDTO;
+        }
+
+
+    }
 }
