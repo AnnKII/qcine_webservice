@@ -58,6 +58,7 @@ public class khachhangAPI {
                 return new ResponseEntity<Object>(result, HttpStatus.OK);
             }
             catch (Exception e){
+                e.printStackTrace();
                 return new ResponseEntity<Object>("NOT FOUND", HttpStatus.NO_CONTENT);
             }
         } else return new ResponseEntity<>("NO RIGHT", HttpStatus.NOT_ACCEPTABLE);
@@ -90,8 +91,8 @@ public class khachhangAPI {
        } else return new ResponseEntity<>("NO RIGHT", HttpStatus.NOT_ACCEPTABLE);
     }
 
-    @DeleteMapping("admin/khachhang/{id}")
-    public  ResponseEntity<Object> deleteKhachHang(@PathVariable("id") String username, @RequestHeader("author") String jwt){
+    @DeleteMapping("admin/khachhang")
+    public  ResponseEntity<Object> deleteKhachHang(@RequestHeader("id") String username, @RequestHeader("author") String jwt){
         if (verifier.verifyLogin(jwt, login, ser_Author)){
             try{
                 String result = (String) service_khachHang.deleteKhachHang(username);
@@ -99,6 +100,7 @@ public class khachhangAPI {
                     return new ResponseEntity<Object>(result, HttpStatus.OK);
                 else return new ResponseEntity<Object>(result, HttpStatus.NOT_ACCEPTABLE);
             } catch (Exception e){
+                e.printStackTrace();
                 return new ResponseEntity<Object>(e.toString(), HttpStatus.NOT_ACCEPTABLE);
             }
         } else return new ResponseEntity<>("NO RIGHT", HttpStatus.NOT_ACCEPTABLE);

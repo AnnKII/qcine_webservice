@@ -1,28 +1,36 @@
 package com.WEBservice_v1.UserController;
 
-import com.WEBservice_v1.DTO.DTO_CtHoaDon;
-import com.WEBservice_v1.DTO.DTO_HoaDon;
-import com.WEBservice_v1.DTO.DTO_KhachHang;
+import com.WEBservice_v1.DTO.*;
 import com.WEBservice_v1.Entity.HoaDon;
-import com.WEBservice_v1.Service.Service_AuthorKey;
-import com.WEBservice_v1.Service.Service_CtHoaDon;
-import com.WEBservice_v1.Service.Service_HoaDon;
+import com.WEBservice_v1.Service.*;
 import com.WEBservice_v1.Verify;
 import com.WEBservice_v1.entity_KeyINFO;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 @RestController
 public class userHoaDonAPI {
     @Autowired
+    JavaMailSender emailSender;
+    @Autowired
     Service_HoaDon ser_HoaDon;
+    @Autowired
+    Service_Phim ser_Phim;
+    @Autowired
+    Service_Lich ser_lich;
+    @Autowired
+    Service_KhachHang ser_khach;
 
     @Autowired
     Service_CtHoaDon service_ctHoaDon;
@@ -100,6 +108,26 @@ public class userHoaDonAPI {
                         e.printStackTrace();
                     }
                 } else {
+                    //Get Needed Information
+                    DTO_Lich lich = (DTO_Lich) ser_lich.getLich(malich);
+                    DTO_Phim phim = (DTO_Phim) ser_Phim.getPhim(lich.getMaphim());
+                    DTO_KhachHang khach = (DTO_KhachHang) ser_khach.getKhachHang(username);
+                    //Send an Email to User
+                    SimpleMailMessage message = new SimpleMailMessage();
+                    message.setTo(username);
+                    message.setSubject("Đặt vé thành công!");
+                    //Set Message
+                    DecimalFormat formatter = new DecimalFormat("###,###,###");
+                    String messageString = "Chào "+ khach.getTen()+"\n";
+                    messageString+="Bạn đã đặt vé thành công với các thông tin như sau:\n";
+                    messageString+="Tên phim: "+phim.getTenphim()+"\n";
+                    messageString+="Suất chiếu vào lúc "+lich.getGio()+" ngày "+lich.getNgay()+"\n";
+                    messageString+="Số vé đã đặt: "+ listSeat.size()+"\n";
+                    messageString+="Tổng tiền: "+ formatter.format(hoadon.getThanhtien())+" VNĐ"+"\n";
+                    messageString+="Bạn có thể xem thông tin chi tiết trên trang Web của chúng tôi\n";
+                    messageString+="QCINE cám ơn sự tin tưởng bạn đã dành cho chúng tôi";
+                    message.setText(messageString);
+                    emailSender.send(message);
                     return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
                 }
 

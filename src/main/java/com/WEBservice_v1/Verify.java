@@ -24,7 +24,7 @@ public  class Verify {
             System.out.println("Can be Trusted");
             String role = Jwts.parser().setSigningKey(login.getKey()).parseClaimsJws(jws).getBody().get("role", String.class);
             System.out.println("Role: "+ role);
-            if(role.equals("admin")){
+            if(role.equals("admin") || role.equals("nhanvien")){
                 System.out.println("Role accepted, Welcome!");
                 return true;
             }

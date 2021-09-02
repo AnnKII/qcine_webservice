@@ -100,7 +100,8 @@ public class Service_HoaDon {
     }
     public int getMaHDCreate(int malich, String username, Date tglap, int thanhTien){
         try{
-            int result = res_HD.getMaHDCreated(malich, username, tglap, thanhTien);
+            List<Integer> listHD = res_HD.getMaHDCreated(malich, username, tglap, thanhTien);
+            int result = listHD.get(listHD.size()-1);
             return result;
         }catch (Exception e){
             e.printStackTrace();
